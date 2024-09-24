@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-catelog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-catelog
+  template:
+    metadata:
+      labels:
+        app: book-catelog
+    spec:
+      containers:
+      - name: book-catelog
+        image: book-catelog:1
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://week06_9kqs_user:GakCu8yPHcCIFglLIycJWjpMndZOG1eH@dpg-crp6n468ii6s73ccrra0-a.oregon-postgres.render.com/week06_9kqs"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-catelog
+spec:
+  selector:
+    app: book-catelog
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30000
